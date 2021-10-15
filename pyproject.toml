@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "cobra_to_toml"
+version = "0.1.0"
+description = ""
+authors = ["carrascomj <carrascomurielj@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+cobra = "^0.22.1"
+toml = "^0.10.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+flake8 = "^4.0.1"
+black = "^21.9b0"
+isort = "^5.9.3"
+flake8-docstrings = "^1.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
