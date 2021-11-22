@@ -29,10 +29,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install poetry
@@ -51,8 +51,8 @@ jobs:
     - name: Install style deps
       run: pip install flake8 flake8-docstrings flake8-bugbear black isort
     - name: flake8 (check code style)
-      run: flake8 cobra_to_model tests
+      run: flake8 cobra_to_toml tests
     - name: black (check code format)
-      run: black --check --diff cobra_to_model tests
+      run: black --check --diff cobra_to_toml tests
     - name: isort (check import sorting)
-      run: isort --check-only --diff cobra_to_model tests
+      run: isort --check-only --diff cobra_to_toml tests

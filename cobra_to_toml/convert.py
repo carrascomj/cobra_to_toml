@@ -9,7 +9,7 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
     """Convert `cobra.Reaction`s to a maud-like TOML."""
     model = next(r.model for r in reactions)
     # metabolites might appear in more than one reaction but must be specified
-    # just once in the TOML file
+    # just once in the TOML file (for each compartment)
     metabolites = set(
         reduce(lambda x, y: x + list(y.keys()), [r.metabolites for r in reactions], [])
     )
@@ -25,7 +25,7 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
     # metabolites are balanced by default, let the users handle that manually
     metabolites_dict = [
         {
-            "id": met.id,
+            "metabolite": met.id,
             "name": met.name,
             "compartment": met.compartment,
             "balanced": True,
@@ -42,7 +42,7 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
             if reac.reversibility
             else "irreversible_modular_rate_law",
             # WARNING: this is probably a bit too much
-            "enzymes": [
+            "enzyme": [
                 {
                     "id": g.annotation["uniprot"]
                     if "uniprot" in g.annotation
@@ -56,9 +56,9 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
     ]
     return toml.dumps(
         {
-            "compartments": compartments_dict,
-            "metabolites": metabolites_dict,
-            "reactions": reactions_dict,
+            "compartment": compartments_dict,
+            "metabolite-in-compartment": metabolites_dict,
+            "reaction": reactions_dict,
         }
     )
 
