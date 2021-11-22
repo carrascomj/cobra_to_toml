@@ -8,6 +8,7 @@ authors = ["carrascomj <carrascomurielj@gmail.com>"]
 python = "^3.9"
 cobra = "^0.22.1"
 toml = "^0.10.2"
+memote = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
