@@ -1,8 +1,13 @@
 """Take a set of reactions and translate them to a Maud TOML input."""
+import re
 from functools import reduce
 
 import cobra
 import toml
+
+
+# expect metabolites to have a compartment in the usual bigg format in the id
+PAT_COMPARTMENT = re.compile(r"_[cemp]$")
 
 
 def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
@@ -25,7 +30,7 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
     # metabolites are balanced by default, let the users handle that manually
     metabolites_dict = [
         {
-            "metabolite": met.id,
+            "metabolite": PAT_COMPARTMENT.sub("", met.id),
             "name": met.name,
             "compartment": met.compartment,
             "balanced": True,
