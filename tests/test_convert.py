@@ -10,9 +10,11 @@ def test_from_model_redeserialization(cobra_model: cobra.Model):
     """Test model conversion returns the right number of redeserialized components."""
     toml_file = model_to_toml(cobra_model)
     redeserialized = toml.loads(toml_file)
-    assert len(redeserialized["reactions"]) == len(cobra_model.reactions)
-    assert len(redeserialized["metabolites"]) == len(cobra_model.metabolites)
-    assert len(redeserialized["compartments"]) == len(cobra_model.compartments)
+    assert len(redeserialized["reaction"]) == len(cobra_model.reactions)
+    assert len(redeserialized["metabolite-in-compartment"]) == len(
+        cobra_model.metabolites
+    )
+    assert len(redeserialized["compartment"]) == len(cobra_model.compartments)
 
 
 def test_from_reactions_redeserialization(cobra_model: cobra.Model):
@@ -21,4 +23,4 @@ def test_from_reactions_redeserialization(cobra_model: cobra.Model):
         [r for i, r in enumerate(cobra_model.reactions) if i % 5 == 0]
     )
     redeserialized = toml.loads(toml_file)
-    assert len(redeserialized["reactions"]) == int(len(cobra_model.reactions) / 5)
+    assert len(redeserialized["reaction"]) == int(len(cobra_model.reactions) / 5)
