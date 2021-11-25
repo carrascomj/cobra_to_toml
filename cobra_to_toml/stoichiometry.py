@@ -1,8 +1,14 @@
 """Stoichiometry operations from a maud TOML file."""
 
+import logging
+
 import cobra
 import toml
 from memote.support.consistency import check_stoichiometric_consistency
+
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
 
 
 def toml_to_cobra(toml_dict: dict) -> cobra.Model:
@@ -15,6 +21,9 @@ def toml_to_cobra(toml_dict: dict) -> cobra.Model:
             )
             for met in toml_dict["metabolite-in-compartment"]
         ]
+    )
+    LOGGER.debug(
+        f"{len(model.metabolites)} gathered: {[met.id for met in model.metabolites]}"
     )
     reacs_to_add = []
     for reac_toml in toml_dict["reaction"]:
@@ -29,6 +38,9 @@ def toml_to_cobra(toml_dict: dict) -> cobra.Model:
         )
         reacs_to_add.append(reac)
     model.add_reactions(reacs_to_add)
+    LOGGER.debug(
+        f"{len(model.reactions)} gathered: {[reac.id for reac in model.reactions]}"
+    )
     return model
 
 
