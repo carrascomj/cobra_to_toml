@@ -42,7 +42,12 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
         {
             "id": reac.id,
             "name": reac.name,
-            "stoichiometry": {met.id: coeff for met, coeff in reac.metabolites.items()},
+            "stoichiometry": dict(
+                sorted(
+                    {met.id: coeff for met, coeff in reac.metabolites.items()}.items(),
+                    key=lambda x: x[1],
+                )
+            ),
             "mechanism": "reversible_modular_rate_law"
             if reac.reversibility
             else "irreversible_modular_rate_law",
