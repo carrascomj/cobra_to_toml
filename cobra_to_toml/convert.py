@@ -34,8 +34,12 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
             "name": met.name,
             "compartment": met.compartment,
             "balanced": True,
+            "metabolite_inchi_key": met.annotation["inchi_key"]
+            if "inchi_key" in met.annotation
+            else "",
         }
         for met in metabolites
+        if met.id != "h_c" or met.id != "h_e"
     ]
     # modifiers are not added, let the users add them themselves
     reactions_dict = [
@@ -44,7 +48,11 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
             "name": reac.name,
             "stoichiometry": dict(
                 sorted(
-                    {met.id: coeff for met, coeff in reac.metabolites.items()}.items(),
+                    {
+                        met.id: coeff
+                        for met, coeff in reac.metabolites.items()
+                        if met.id != "h_c"
+                    }.items(),
                     key=lambda x: x[1],
                 )
             ),
@@ -54,9 +62,7 @@ def reactions_to_toml(reactions: list[cobra.Reaction]) -> str:
             # WARNING: this is probably a bit too much
             "enzyme": [
                 {
-                    "id": g.annotation["uniprot"]
-                    if "uniprot" in g.annotation
-                    else g.id,
+                    "id": g.id,
                     "name": f"{g.id} in {reac.id}",
                 }
                 for g in reac.genes
