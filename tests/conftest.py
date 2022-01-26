@@ -11,3 +11,9 @@ def cobra_model() -> cobra.Model:
     return cobra.io.read_sbml_model(
         join(dirname(__file__), "data", "ecoli_core_model.xml")
     )
+
+
+@pytest.fixture()
+def proteomics_file() -> str:
+    """Load dummy proteomics data."""
+    return join(dirname(__file__), "data", "proteomics_dummy.tsv")
