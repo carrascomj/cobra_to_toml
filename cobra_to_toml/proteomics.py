@@ -1,10 +1,14 @@
 """Functionality for formatting a protein dataset as priors."""
 
+import re
 import warnings
 
 import numpy as np
 import pandas as pd
 import toml
+
+
+CAMEL_PATTERN = re.compile(r"([^A-Z])([A-Z]| |\-)")
 
 
 def extract_prots_maud(maud_toml: str) -> list[str]:
@@ -41,7 +45,12 @@ def format_enzyme_priors(df: pd.DataFrame, protein_ids: list) -> pd.DataFrame:
             "enzyme_id": df_filter["Gene/proteinID"],
             "drain_id": None,
             "phos_enz_id": None,
-            "experiment_id": df_filter["condition"],
+            "experiment_id": df_filter["condition"].apply(
+                lambda x: re.sub(CAMEL_PATTERN, r"\1_\2", x)
+                .lower()
+                .replace(" ", "")
+                .replace("-", "")
+            ),
             "location": df_filter["mM"].round(9),
             "scale": df_filter["logSD"].round(9),
             "pct1": None,
